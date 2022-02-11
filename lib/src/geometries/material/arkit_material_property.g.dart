@@ -47,6 +47,7 @@ ARKitMaterialVideo _$ARKitMaterialVideoFromJson(Map json) => ARKitMaterialVideo(
       autoplay: json['autoplay'] as bool? ?? true,
       filename: json['filename'] as String?,
       url: json['url'] as String?,
+      isMuted: json['isMuted'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$ARKitMaterialVideoToJson(ARKitMaterialVideo instance) {
@@ -63,5 +64,6 @@ Map<String, dynamic> _$ARKitMaterialVideoToJson(ARKitMaterialVideo instance) {
   val['width'] = instance.width;
   val['height'] = instance.height;
   val['autoplay'] = instance.autoplay;
+  val['isMuted'] = instance.isMuted;
   return val;
 }

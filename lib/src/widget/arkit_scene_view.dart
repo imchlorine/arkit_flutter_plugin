@@ -732,7 +732,7 @@ class ARKitController {
 
   Future<Vector3> getCameraEulerAngles() async {
     final result = await _channel.invokeListMethod('cameraEulerAngles');
-    final vector3 = _vector3Converter.fromJson(result!);
+    final vector3 = result == null ? Vector3.zero() : _vector3Converter.fromJson(result);
     return vector3;
   }
 

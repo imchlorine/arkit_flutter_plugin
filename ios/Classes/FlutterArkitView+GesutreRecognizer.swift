@@ -67,7 +67,9 @@ extension FlutterArkitView: UIGestureRecognizerDelegate {
             let hitResults = sceneView.hitTest(touchLocation, options: nil)
             let results: Array<Dictionary<String, Any>> = hitResults.compactMap {
                 if let name = $0.node.name {
-                    return ["nodeName" : name, "scale": recognizer.scale]
+                    let parentNode = getParentNode($0.node)
+                    return ["nodeName": name, "parentNodeName": parentNode?.name as Any, "scale": recognizer.scale]
+
                 } else {
                     return nil
                 }
@@ -89,9 +91,8 @@ extension FlutterArkitView: UIGestureRecognizerDelegate {
             
             let results: Array<Dictionary<String, Any>> = hitResults.compactMap {
                 if let name = $0.node.name {
-                    return ["nodeName" : name,
-                            "translation": [translation.x, translation.y]
-                    ]
+                    let parentNode = getParentNode($0.node)
+                    return ["nodeName" : name, "parentNodeName": parentNode?.name as Any, "translation": [translation.x, translation.y]]
                 } else {
                     return nil
                 }
@@ -112,7 +113,8 @@ extension FlutterArkitView: UIGestureRecognizerDelegate {
             
             let results: Array<Dictionary<String, Any>> = hitResults.compactMap {
                 if let name = $0.node.name {
-                    return ["nodeName" : name, "rotation": recognizer.rotation]
+                    let parentNode = getParentNode($0.node)
+                    return ["nodeName" : name, "parentNodeName": parentNode?.name as Any, "rotation": recognizer.rotation]
                 } else {
                     return nil
                 }
@@ -122,6 +124,18 @@ extension FlutterArkitView: UIGestureRecognizerDelegate {
             }
             recognizer.rotation = 0
         }
+
     }
+
+    func getParentNode(_ node: SCNNode) -> SCNNode? {
+        var parentNode: SCNNode? = node.parent
+        
+        while parentNode != nil && !(parentNode is SCNReferenceNode) {
+            parentNode = parentNode?.parent
+        }
+        
+        return parentNode ?? node.parent
+    }
+
     
 }

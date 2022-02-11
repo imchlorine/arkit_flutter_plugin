@@ -158,28 +158,66 @@ fileprivate func parsePropertyContents(_ dict: Any?) -> Any? {
   if let width = dict["width"] as? Int,
      let height = dict["height"] as? Int,
      let autoplay = dict["autoplay"] as? Bool,
+     let isMuted = dict["isMuted"] as? Bool,
      let id = dict["id"] as? String {
     var videoNode:SKVideoNode
-    if let videoFilename = dict["filename"] as? String {
-      videoNode = SKVideoNode(fileNamed: videoFilename)
-    } else if let url = dict["url"] as? String,
+    var player: AVPlayer
+    var asset: AVURLAsset
+    if let url = dict["url"] as? String,
               let videoUrl = URL(string: url) {
-      videoNode = SKVideoNode(url: videoUrl)
+      asset = AVURLAsset(url:videoUrl)
+      player = AVPlayer(playerItem: AVPlayerItem(asset: asset))
+      _ = VideoLooper(player)
+      videoNode = SKVideoNode(avPlayer: player)
     } else {
       return nil
     }
+
     VideoArkitPlugin.nodes[id] = videoNode
     if (autoplay) {
+      player.play()
+      player.isMuted = isMuted
       videoNode.play()
     }
-    
-    
-    let skScene = SKScene(size: CGSize(width: width, height: height))
+
+    let transform = asset.tracks(withMediaType: AVMediaType.video)[0].preferredTransform
+    let videoAngleInDegree = atan2(transform.b, transform.a) * 180 / .pi
+    let naturalSize = asset.tracks(withMediaType: AVMediaType.video)[0].naturalSize
+    var size = naturalSize
+    if (videoAngleInDegree == 90 || videoAngleInDegree == 270) {
+        size = CGSize(width: naturalSize.height, height: naturalSize.width)
+    }
+    // let skScene = SKScene(size: CGSize(width: width, height: height))
+    let skScene = SKScene(size: naturalSize)
+    skScene.scaleMode = .aspectFit
     skScene.addChild(videoNode)
+
     
     videoNode.position = CGPoint(x: skScene.size.width/2, y: skScene.size.height/2)
     videoNode.size = skScene.size
+  
+    videoNode.zRotation = CGFloat(-videoAngleInDegree) * .pi / 180
+
     return skScene
   }
   return nil
 }
+
+
+class VideoLooper {
+    var playerObserver: Any?
+    
+    init(_ player: AVPlayer) {
+        player.actionAtItemEnd = .none
+
+        playerObserver = NotificationCenter.default.addObserver(
+            forName: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+            object: player.currentItem,
+            queue: nil) { notification in
+                if let playerItem: AVPlayerItem = notification.object as? AVPlayerItem {
+                    playerItem.seek(to: CMTime.zero, completionHandler: nil)
+                }
+            }
+    }
+}
+

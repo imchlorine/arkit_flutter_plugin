@@ -9,6 +9,7 @@ part of 'arkit_node_rotation_result.dart';
 ARKitNodeRotationResult _$ARKitNodeRotationResultFromJson(Map json) =>
     ARKitNodeRotationResult(
       json['nodeName'] as String?,
+      json['parentNodeName'] as String?,
       (json['rotation'] as num).toDouble(),
     );
 
@@ -23,6 +24,7 @@ Map<String, dynamic> _$ARKitNodeRotationResultToJson(
   }
 
   writeNotNull('nodeName', instance.nodeName);
+  writeNotNull('parentNodeName', instance.parentNodeName);
   val['rotation'] = instance.rotation;
   return val;
 }

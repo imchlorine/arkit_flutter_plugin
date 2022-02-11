@@ -1,3 +1,4 @@
+import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:arkit_plugin/src/geometries/arkit_geometry.dart';
 import 'package:arkit_plugin/src/light/arkit_light.dart';
 import 'package:arkit_plugin/src/physics/arkit_physics_body.dart';
@@ -12,6 +13,7 @@ import 'package:vector_math/vector_math_64.dart';
 /// The coordinate systems of all the sub-nodes are relative to the one of their parent node.
 class ARKitNode {
   ARKitNode({
+    this.anchor,
     this.geometry,
     this.physicsBody,
     this.light,
@@ -25,11 +27,13 @@ class ARKitNode {
     Matrix4? transformation,
   })  : name = name ?? random_string.randomString(),
         isHidden = ValueNotifier(isHidden),
-        transformNotifier = ValueNotifier(createTransformMatrix(
-            transformation, position, scale, rotation, eulerAngles));
+        transformNotifier = ValueNotifier(createTransformMatrix(transformation, position, scale, rotation, eulerAngles));
 
   static const bool defaultIsHiddenValue = false;
   static const int defaultRenderingOrderValue = 0;
+
+  /// Anchor of this node
+  final ARKitAnchor? anchor;
 
   /// Returns the geometry attached to the receiver.
   final ARKitGeometry? geometry;
@@ -57,16 +61,14 @@ class ARKitNode {
   Vector3 get scale => transform.matrixScale;
 
   set scale(Vector3 value) {
-    transform =
-        Matrix4.compose(position, Quaternion.fromRotation(rotation), value);
+    transform = Matrix4.compose(position, Quaternion.fromRotation(rotation), value);
   }
 
   /// Determines the receiver's rotation.
   Matrix3 get rotation => transform.getRotation();
 
   set rotation(Matrix3 value) {
-    transform =
-        Matrix4.compose(position, Quaternion.fromRotation(value), scale);
+    transform = Matrix4.compose(position, Quaternion.fromRotation(value), scale);
   }
 
   /// Determines the receiver's euler angles.

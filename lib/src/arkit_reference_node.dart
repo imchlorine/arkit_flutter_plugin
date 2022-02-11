@@ -1,12 +1,11 @@
-import 'package:arkit_plugin/src/arkit_node.dart';
-import 'package:arkit_plugin/src/light/arkit_light.dart';
-import 'package:arkit_plugin/src/physics/arkit_physics_body.dart';
+import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 ///  Node that references an external serialized node graph.
 class ARKitReferenceNode extends ARKitNode {
   ARKitReferenceNode({
     required this.url,
+    ARKitAnchor? anchor,
     ARKitPhysicsBody? physicsBody,
     ARKitLight? light,
     Vector3? position,
@@ -16,6 +15,7 @@ class ARKitReferenceNode extends ARKitNode {
     int renderingOrder = ARKitNode.defaultRenderingOrderValue,
     bool isHidden = ARKitNode.defaultIsHiddenValue,
   }) : super(
+          anchor: anchor,
           physicsBody: physicsBody,
           light: light,
           position: position,

@@ -5,10 +5,11 @@ part 'arkit_node_rotation_result.g.dart';
 /// The result of users pinch gesture interaction with nodes
 @JsonSerializable()
 class ARKitNodeRotationResult {
-  const ARKitNodeRotationResult(this.nodeName, this.rotation);
+  const ARKitNodeRotationResult(this.nodeName, this.parentNodeName, this.rotation);
 
   /// The name of the node which users is interacting with.
   final String? nodeName;
+  final String? parentNodeName;
 
   /// The rotation value.
   final double rotation;

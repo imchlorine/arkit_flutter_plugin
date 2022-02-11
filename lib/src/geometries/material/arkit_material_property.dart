@@ -32,6 +32,7 @@ abstract class ARKitMaterialProperty {
     String? filename,
     String? url,
     bool? autoplay = true,
+    bool? isMuted = true,
   }) =>
       ARKitMaterialVideo(
         filename: filename,
@@ -39,6 +40,7 @@ abstract class ARKitMaterialProperty {
         width: width,
         height: height,
         autoplay: autoplay ?? true,
+        isMuted: isMuted ?? true,
       );
 
   final String type;
@@ -118,6 +120,7 @@ class ARKitMaterialVideo extends ARKitMaterialProperty {
     this.autoplay = true,
     this.filename,
     this.url,
+    this.isMuted = true,
   })  : id = UniqueKey().toString(),
         super._('video');
 
@@ -126,6 +129,7 @@ class ARKitMaterialVideo extends ARKitMaterialProperty {
   final int width;
   final int height;
   final bool autoplay;
+  final bool isMuted;
 
   final String id;
 

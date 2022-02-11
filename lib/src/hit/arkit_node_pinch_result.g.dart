@@ -9,6 +9,7 @@ part of 'arkit_node_pinch_result.dart';
 ARKitNodePinchResult _$ARKitNodePinchResultFromJson(Map json) =>
     ARKitNodePinchResult(
       json['nodeName'] as String?,
+      json['parentNodeName'] as String?,
       (json['scale'] as num).toDouble(),
     );
 
@@ -23,6 +24,7 @@ Map<String, dynamic> _$ARKitNodePinchResultToJson(
   }
 
   writeNotNull('nodeName', instance.nodeName);
+  writeNotNull('parentNodeName', instance.parentNodeName);
   val['scale'] = instance.scale;
   return val;
 }
